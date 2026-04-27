@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>game1</title>
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <div id="game"></div>
+      <div id="ui-root" data-mode="menu">
+        <section id="start-menu" class="screen-layer start-menu is-active" aria-label="game1 main menu">
+          <div class="menu-panel">
+            <div class="menu-mark">PIXEL ROGUELIKE</div>
+            <h1>game1</h1>
+            <div class="sprite-band" aria-hidden="true"></div>
+            <div class="menu-actions">
+              <button id="start-button" class="ui-button primary" type="button">开始游戏</button>
+              <button id="resume-button" class="ui-button" type="button" disabled>继续冒险</button>
+            </div>
+            <div class="record-strip">
+              <span>BEST DEPTH <strong id="best-depth">0</strong></span>
+              <span>BEST GOLD <strong id="best-gold">0</strong></span>
+            </div>
+          </div>
+        </section>
+
+        <section id="game-hud" class="game-hud is-hidden" aria-label="game status">
+          <div class="hud-panel status-panel">
+            <div class="hud-title">game1</div>
+            <div class="hp-row">
+              <span id="hp-label">HP 0/0</span>
+              <div class="hp-track" aria-hidden="true"><div id="hp-fill"></div></div>
+            </div>
+            <div class="stat-grid">
+              <div><span>DEPTH</span><strong id="depth-value">1</strong></div>
+              <div><span>ATK</span><strong id="attack-value">0</strong></div>
+              <div><span>GOLD</span><strong id="gold-value">0</strong></div>
+              <div><span>ENEMY</span><strong id="enemy-value">0</strong></div>
+            </div>
+          </div>
+
+          <div class="hud-panel minimap-panel">
+            <div class="panel-label">MAP</div>
+            <canvas id="minimap" width="148" height="96"></canvas>
+            <div class="map-key">
+              <span><i class="key-player"></i>YOU</span>
+              <span><i class="key-npc"></i>NPC</span>
+              <span><i class="key-exit"></i>EXIT</span>
+            </div>
+          </div>
+
+          <button id="pause-button" class="ui-button pause-button" type="button">暂停</button>
+          <div id="npc-prompt" class="npc-prompt is-hidden">按 E 交谈</div>
+          <div id="message-log" class="message-log" aria-live="polite"></div>
+        </section>
+
+        <section id="pause-menu" class="screen-layer pause-menu" aria-label="paused">
+          <div class="overlay-panel">
+            <div class="overlay-title">PAUSED</div>
+            <button id="resume-pause-button" class="ui-button primary" type="button">继续</button>
+            <button id="restart-pause-button" class="ui-button" type="button">重新开始</button>
+            <button id="main-menu-button" class="ui-button" type="button">主菜单</button>
+          </div>
+        </section>
+
+        <section id="game-over-menu" class="screen-layer game-over-menu" aria-label="game over">
+          <div class="overlay-panel">
+            <div class="overlay-title">RUN ENDED</div>
+            <div class="final-stats">
+              <span>DEPTH <strong id="final-depth">1</strong></span>
+              <span>GOLD <strong id="final-gold">0</strong></span>
+              <span>TURNS <strong id="final-turns">0</strong></span>
+            </div>
+            <button id="restart-gameover-button" class="ui-button primary" type="button">再来一次</button>
+            <button id="gameover-menu-button" class="ui-button" type="button">主菜单</button>
+          </div>
+        </section>
+      </div>
+    </main>
+    <img
+      id="tiny-dungeon-image"
+      class="preload-asset"
+      src="./public/assets/kenney-tiny-dungeon/tilemap_game1.png"
+      alt=""
+    />
+    <script src="./public/vendor/phaser.min.js"></script>
+    <script src="./src/scenes/RogueScene.js"></script>
+    <script src="./src/main.js"></script>
+  </body>
+</html>
