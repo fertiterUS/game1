@@ -72,6 +72,7 @@ class RogueScene extends Phaser.Scene {
     this.hutLayer = null;
     this.npc = null;
     this.npcSprite = null;
+    this.dialogTimer = null;
     this.enemySprites = new Map();
     this.itemSprites = new Map();
     this.messageQueue = [];
@@ -116,6 +117,9 @@ class RogueScene extends Phaser.Scene {
       goldValue: document.getElementById('gold-value'),
       enemyValue: document.getElementById('enemy-value'),
       messageLog: document.getElementById('message-log'),
+      dialogBox: document.getElementById('dialog-box'),
+      dialogSpeaker: document.getElementById('dialog-speaker'),
+      dialogText: document.getElementById('dialog-text'),
       minimap: document.getElementById('minimap'),
       npcPrompt: document.getElementById('npc-prompt'),
       bestDepth: document.getElementById('best-depth'),
@@ -195,6 +199,10 @@ class RogueScene extends Phaser.Scene {
     this.ui.hud.classList.toggle('is-hidden', mode === 'menu');
     this.ui.resumeButton.disabled = !this.hasActiveRun || this.isOver;
     this.ui.npcPrompt.classList.toggle('is-hidden', mode !== 'playing' || !this.canTalkToNpc());
+
+    if (mode !== 'playing') {
+      this.hideDialog();
+    }
   }
 
   readRecord() {
@@ -826,7 +834,7 @@ class RogueScene extends Phaser.Scene {
 
   interactNpc() {
     if (!this.canTalkToNpc()) {
-      this.flashMessage('No one is close enough to talk.');
+      this.flashMessage('周围没有可以交谈的人。');
       return;
     }
 
@@ -839,18 +847,47 @@ class RogueScene extends Phaser.Scene {
       if (missingHp > 0) {
         const healed = Math.min(4, missingHp);
         this.player.hp = clamp(this.player.hp + healed, 1, this.player.maxHp);
-        this.flashMessage(`Caretaker: Rest by the fire. +${healed} hp`);
+        this.showDialog('村口看守', `火边还能歇一会儿。你恢复了 ${healed} 点生命。`);
       } else {
         this.player.gold += 2;
-        this.flashMessage('Caretaker: Take a road coin. +2 gold');
+        this.showDialog('村口看守', '带上这枚路钱吧。地牢不会对空手的人温柔。');
       }
     } else if (this.npc.talks % 2 === 0) {
-      this.flashMessage('Caretaker: The yellow mark on the map is the stairs.');
+      this.showDialog('村口看守', '小地图上的黄色标记就是下一层入口。别在石墙边绕太久。');
     } else {
-      this.flashMessage('Caretaker: Stone walls are darker now. Trust the map.');
+      this.showDialog('村口看守', '新砌的石墙颜色更深，和地板容易分清。迷路时先看右上角。');
     }
 
     this.updateHud();
+  }
+
+  showDialog(speaker, text, duration = 4800) {
+    if (!this.ui || !this.ui.dialogBox) {
+      return;
+    }
+
+    if (this.dialogTimer) {
+      this.dialogTimer.remove(false);
+      this.dialogTimer = null;
+    }
+
+    this.ui.dialogSpeaker.textContent = speaker;
+    this.ui.dialogText.textContent = text;
+    this.ui.dialogBox.classList.remove('is-hidden');
+    this.dialogTimer = this.time.delayedCall(duration, () => this.hideDialog());
+  }
+
+  hideDialog() {
+    if (!this.ui || !this.ui.dialogBox) {
+      return;
+    }
+
+    this.ui.dialogBox.classList.add('is-hidden');
+
+    if (this.dialogTimer) {
+      this.dialogTimer.remove(false);
+      this.dialogTimer = null;
+    }
   }
 
   showGameOver() {

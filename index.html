@@ -53,6 +53,14 @@
 
           <button id="pause-button" class="ui-button pause-button" type="button">暂停</button>
           <div id="npc-prompt" class="npc-prompt is-hidden">按 E 交谈</div>
+          <div id="dialog-box" class="dialog-box is-hidden" role="status" aria-live="polite">
+            <div id="dialog-speaker" class="dialog-speaker">村口看守</div>
+            <div class="dialog-inner">
+              <p id="dialog-text" class="dialog-text"></p>
+              <span class="dialog-stripes left" aria-hidden="true"></span>
+              <span class="dialog-stripes right" aria-hidden="true"></span>
+            </div>
+          </div>
           <div id="message-log" class="message-log" aria-live="polite"></div>
         </section>
 
